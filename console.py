@@ -2,6 +2,7 @@
 """ Console Module """
 import cmd
 import sys
+from shlex import split
 from models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
@@ -30,22 +31,6 @@ class HBNBCommand(cmd.Cmd):
              'latitude': float, 'longitude': float
             }
 
-    def parse(args):
-        if args == None:
-            return;
-        kwargs = {}
-        for arg in args:
-            n = 0
-            name = ""
-            value = ""
-            for i in arg:
-                if i == "=":
-                    name = arg[:i]
-                    value = arg[i+1:].replace('_', ' ')
-                    n += 1
-
-            kwargs[name] = value
-        return (kwargs)
 
     def preloop(self):
         """Prints if isatty is false"""
@@ -134,14 +119,27 @@ class HBNBCommand(cmd.Cmd):
         """ Create an object of any class"""
         if not args:
             print("** class name missing **")
-            return
-        elif args not in HBNBCommand.classes:
-            print("** class doesn't exist **")
-            return
-        new_instance = HBNBCommand.classes[args]()
-        storage.save()
-        print(new_instance.id)
-        storage.save()
+        my_list = args.split(" ")
+
+        kwargs = {}
+        for i in range(1, len(my_list)):
+            key, value = my_list[i].split("=")
+            if value[0] == '"':
+                value = value.strip('"')
+                value = value.replace("_", " ")
+                kwargs[key] = value
+            else:
+                value = eval(value)
+                kwargs[key] = value
+
+        classname = self.classes[my_list[0]]
+        if kwargs == {}:
+            obj = classname()
+            print(obj.id)
+        else:
+            obj = classname(**kwargs)
+            storage.new(obj)
+        obj.save()
 
     def help_create(self):
         """ Help information for the create method """
