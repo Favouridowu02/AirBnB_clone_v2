@@ -1,5 +1,5 @@
 -- A Script that prepares a My SQL server for the  Project
--- 
+-- This is the Development Stage 
 
 CREATE DATABASE IF NOT EXISTS hbnb_dev_db;
 USE hbnb_dev_db;
