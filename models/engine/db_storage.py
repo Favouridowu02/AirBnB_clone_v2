@@ -8,11 +8,11 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from os import getenv
 
 from models.amenity import Amenity
+from models.user import User
 from models.city import City
 from models.place import Place
 from models.review import Review
 from models.state import State
-from models.user import User
 
 user = getenv('HBNB_MYSQL_USER')
 password = getenv('HBNB_MYSQL_PWD')
@@ -61,13 +61,6 @@ class DBStorage:
                 cls: the class 
                 if cls=None: User, State, City, Amenity, Place and Review.
         """
-        from models.amenity import Amenity
-        from models.user import User
-        from models.city import City
-        from models.place import Place
-        from models.review import Review
-        from models.state import State
-        
         classes = {
             'Amenity': Amenity,
             'User': User,
@@ -80,10 +73,9 @@ class DBStorage:
         if cls is None:
             for val in classes.values():
                 obj.extend(self.__session.query(val).all())
-        elif not isinstance(cls, str):
-            obj = self.__session.query(cls).all()
         else:
-            cls = classes.get(cls)
+            if isinstance(cls, str):
+                cls = classes.get(cls)
             if cls:
                 obj = self.__session.query(cls).all()
         

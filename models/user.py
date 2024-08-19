@@ -6,7 +6,7 @@ from models.base_model import Base
 
 class User(BaseModel, Base):
     """This class defines a user by various attributes"""
-    __tablename__ = 'user'
+    __tablename__ = 'users'
     email = ''
     password = ''
     first_name = ''

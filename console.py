@@ -138,6 +138,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             obj = classname(**kwargs)
             # storage.new(obj)
+
         print(obj.id)
         obj.save()
 
@@ -214,6 +215,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
+
         if not args:
             o = storage.all()
             print([o[k].__str__() for k in o])

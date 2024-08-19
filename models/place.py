@@ -6,7 +6,7 @@ from models.base_model import Base
 
 class Place(BaseModel, Base):
     """ A place to stay """
-    __tablename__ = 'place'
+    __tablename__ = 'places'
     city_id = ""
     user_id = ""
     name = ""

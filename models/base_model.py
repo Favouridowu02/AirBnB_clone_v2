@@ -28,7 +28,6 @@ class BaseModel:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now(timezone.utc)
             self.updated_at = datetime.now(timezone.utc)
-            # storage.new(self)
         else:
             if 'name' in kwargs:
                 self.name = kwargs['name']
@@ -58,6 +57,7 @@ class BaseModel:
         """Updates updated_at with current time when instance is changed"""
         from models import storage
         self.updated_at = datetime.now()
+        print(self)
         storage.new(self)
         storage.save()
 
