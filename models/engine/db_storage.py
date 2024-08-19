@@ -7,6 +7,13 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from os import getenv
 
+from models.amenity import Amenity
+from models.city import City
+from models.place import Place
+from models.review import Review
+from models.state import State
+from models.user import User
+
 user = getenv('HBNB_MYSQL_USER')
 password = getenv('HBNB_MYSQL_PWD')
 host = getenv('HBNB_MYSQL_HOST')
@@ -38,7 +45,8 @@ class DBStorage:
         """
         self.__engine = create_engine("{}+{}://{}:{}@{}/{}"
                                  .format(dialect, driver, user, password, host, db),
-                                 pool_pre_ping=True)
+                                 pool_pre_ping=True, echo=True)
+        self.reload()
         if env == "test":
             Base.metadata.drop_all(self.__engine)
 
@@ -59,19 +67,26 @@ class DBStorage:
         from models.place import Place
         from models.review import Review
         from models.state import State
-    
-        if cls == None:
-            obj = self.__session.query(User).all()
-            obj.extend(self.__session.query(State).all())
-            obj.extend(self.__session.query(City).all())
-            obj.extend(self.__session.query(Amenity).all())
-            obj.extend(self.__session.query(Place).all())
-            obj.extend(self.__session.query(Review).all())
-        else:
-            cls = eval(cls)
-            obj = self.__session.query("{}".format(cls)).all()
         
-
+        classes = {
+            'Amenity': Amenity,
+            'User': User,
+            'City': City,
+            'Place': Place,
+            'Review': Review,
+            'State': State
+        }
+        obj = []
+        if cls is None:
+            for val in classes.values():
+                obj.extend(self.__session.query(val).all())
+        elif not isinstance(cls, str):
+            obj = self.__session.query(cls).all()
+        else:
+            cls = classes.get(cls)
+            if cls:
+                obj = self.__session.query(cls).all()
+        
         return {"{}.{}".format(i.__class__.__name__, i.id): i for i in obj}
     
     def new(self, obj):
@@ -114,3 +129,7 @@ class DBStorage:
         session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session()
+
+    def close(self):
+        """Close the working SQLAlchemy session."""
+        self.__session.close()

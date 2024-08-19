@@ -4,25 +4,35 @@ from models.base_model import BaseModel
 from models.base_model import Base
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
-from models import storage
-from models import city
+from models.city import City
+from os import getenv
 
 
 class State(BaseModel, Base):
-    """ State class """
-    __tablename__ = "state"
+    """ State class 
+    
+    Represents a state for a MySQL database.
 
+    Inherits from SQLAlchemy Base and links to the MySQL table states.
+
+    Attributes:
+        __tablename__ (str): The name of the MySQL table to store States.
+        name (sqlalchemy String): The name of the State.
+        cities (sqlalchemy relationship): The State-City relationship.
+    """
+    __tablename__ = "states"
     name = Column(String(128), nullable=False)
-    if (storage.__class__.__name__ == 'DBStorage'):
-        cities = relationship('City',  backref='state',
+    cities = relationship('City',  backref='state',
                               cascade='all, delete-orphan')
-    elif (storage.__class__.__name__ == 'FileStorage'):
+    if getenv("HBNB_TYPE_STORAGE") != "db":
         @property
         def cities(self):
+            from models import storage
             my_list = []
             for i in storage.all('Cities'):
                 if i.state_id == State.id:
-                    list.append(i)
+                    my_list.append(i)
+                return my_list
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

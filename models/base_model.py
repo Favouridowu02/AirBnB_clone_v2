@@ -9,11 +9,17 @@ Base = declarative_base()
 
 
 class BaseModel:
-    """A base class for all hbnb models"""
+    """A base class for all hbnb models
+    
+    Attributes:
+        id (sqlalchemy String): The BaseModel id.
+        created_at (sqlalchemy DateTime): The datetime at creation.
+        updated_at (sqlalchemy DateTime): The datetime of last update.
+    """
     
     id = Column(String(60), nullable=False, unique=True, primary_key=True)
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
-    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow)
 
     def __init__(self, *args, **kwargs):
         """Instantiates a new model"""
@@ -22,22 +28,23 @@ class BaseModel:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now(timezone.utc)
             self.updated_at = datetime.now(timezone.utc)
-            storage.new(self)
+            # storage.new(self)
         else:
             if 'name' in kwargs:
                 self.name = kwargs['name']
             if 'updated_at' in kwargs:
                 kwargs['updated_at'] = datetime.strptime(kwargs['updated_at'],
-                                                     '%Y-%m-%dT%H:%M:%S.%f')
+                                                     '%Y-%m-%dT%H:%M:%S.%f%z')
             else:
-                kwargs['updated_at'] = datetime.now()
+                kwargs['updated_at'] = datetime.now(timezone.utc)
             
             if 'created_at' in kwargs:
                 kwargs['created_at'] = datetime.strptime(kwargs['created_at'],
-                                                     '%Y-%m-%dT%H:%M:%S.%f')
+                                                     '%Y-%m-%dT%H:%M:%S.%f%z')
             else:
-                kwargs['created_at'] = datetime.now()
-            self.id = str(uuid.uuid4())
+                kwargs['created_at'] = datetime.now(timezone.utc)
+            if 'id' not in kwargs:
+                self.id = str(uuid.uuid4())
             if '__class__' in kwargs:
                 del kwargs['__class__']
             self.__dict__.update(kwargs)
@@ -51,6 +58,7 @@ class BaseModel:
         """Updates updated_at with current time when instance is changed"""
         from models import storage
         self.updated_at = datetime.now()
+        storage.new(self)
         storage.save()
 
     def to_dict(self):
