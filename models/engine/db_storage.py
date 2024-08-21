@@ -2,7 +2,6 @@
 """
     This Module contains the DB storage
 """
-from models.base_model import Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from os import getenv
@@ -40,6 +39,7 @@ class DBStorage:
 
 
     def __init__(self):
+        from models.base_model import Base
         """
             This is the initialization of the DBstorage
         """
@@ -116,6 +116,7 @@ class DBStorage:
             Create all tables in the database and the  current databbase session
             from the engine.
         """
+        from models.base_model import Base
         Base.metadata.create_all(self.__engine)
 
         session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
