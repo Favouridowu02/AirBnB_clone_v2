@@ -21,17 +21,18 @@ class State(BaseModel, Base):
     """
     __tablename__ = "states"
     name = Column(String(128), nullable=False)
-    cities = relationship('City',  backref='state',
-                              cascade='all, delete-orphan')
+    if getenv("HBNB_TYPE_STORAGE") == "db":
+        cities = relationship('City',  backref='state',
+                            cascade='all, delete-orphan')
     if getenv("HBNB_TYPE_STORAGE") != "db":
         @property
         def cities(self):
             from models import storage
             my_list = []
-            for i in storage.all('Cities'):
-                if i.state_id == State.id:
+            for i in storage.all(City).values():
+                if i.state_id == self.id:
                     my_list.append(i)
-                return my_list
+            return my_list
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

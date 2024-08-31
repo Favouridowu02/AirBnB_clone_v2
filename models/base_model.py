@@ -39,7 +39,7 @@ class BaseModel:
             
             if 'created_at' in kwargs:
                 kwargs['created_at'] = datetime.strptime(kwargs['created_at'],
-                                                     '%Y-%m-%dT%H:%M:%S.%f')
+                                                     '%Y-%m-%dT%H:%M:%S.%f%z')
             else:
                 kwargs['created_at'] = datetime.now(timezone.utc)
             if 'id' not in kwargs:
