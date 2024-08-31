@@ -10,7 +10,6 @@ __all__ = ['State', 'Amenity', 'City', 'Place', 'User', 'Review']
 from os import getenv
 
 HBNB_TYPE_STORAGE = getenv('HBNB_TYPE_STORAGE')
-HBNB_TYPE_STORAGE = 'fs'
 if HBNB_TYPE_STORAGE == 'db':
     from models.engine.db_storage import DBStorage
     storage = DBStorage()
