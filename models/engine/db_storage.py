@@ -37,28 +37,25 @@ class DBStorage:
     __engine = None
     __session = None
 
-
     def __init__(self):
         from models.base_model import Base
         """
             This is the initialization of the DBstorage
         """
         self.__engine = create_engine("{}+{}://{}:{}@{}/{}"
-                                 .format(dialect, driver, user, password, host, db),
-                                 pool_pre_ping=True)
+                                      .format(dialect, driver, user, password,
+                                              host, db), pool_pre_ping=True)
         self.reload()
         if env == "test":
             Base.metadata.drop_all(self.__engine)
 
-
-        
     def all(self, cls=None):
         """
             Query on the current database session all objects
             depending of the class name argumnets.
 
             Attributes:
-                cls: the class 
+                cls: the class
                 if cls=None: User, State, City, Amenity, Place and Review.
         """
         classes = {
@@ -78,9 +75,9 @@ class DBStorage:
                 cls = classes.get(cls)
             if cls:
                 obj = self.__session.query(cls).all()
-        
+
         return {"{}.{}".format(i.__class__.__name__, i.id): i for i in obj}
-    
+
     def new(self, obj):
         """
             This function adds an object to the current database session
@@ -113,13 +110,14 @@ class DBStorage:
 
     def reload(self):
         """
-            Create all tables in the database and the  current databbase session
+            Create all tables in the database and the current databbase session
             from the engine.
         """
         from models.base_model import Base
         Base.metadata.create_all(self.__engine)
 
-        session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        session_factory = sessionmaker(bind=self.__engine,
+                                       expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session()
 
