@@ -127,5 +127,5 @@ class DBStorage:
         """Close the working SQLAlchemy session."""
         self.__session.close()
         self.reload()
-        [self.__session.refresh(obj) for obj in self.__session]
+        # [self.__session.refresh(obj) for obj in self.__session]
         # self.__session.remove()
