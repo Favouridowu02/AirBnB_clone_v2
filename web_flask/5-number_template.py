@@ -12,6 +12,7 @@
     Option: strict_slashes=False
 """
 from flask import Flask
+from flask import render_template
 
 app = Flask(__name__)
 
@@ -42,6 +43,11 @@ def python(text="is_cool"):
 @app.route('/number/<int:n>', strict_slashes=False)
 def number(n):
     return f"{n} is a number"
+
+
+@app.route('/number_template/<int:n>', strict_slashes=False)
+def num_temp(n):
+    return render_template('number.html', n=n)
 
 
 if __name__ == "__main__":
