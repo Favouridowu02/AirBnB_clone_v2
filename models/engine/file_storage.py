@@ -66,3 +66,7 @@ class FileStorage:
         objname = obj.to_dict()['__class__'] + '.' + obj.id
         del FileStorage.__objects[objname]
         self.save()
+
+    def close(self):
+        """A public method that calls the reload method"""
+        self.reload()
