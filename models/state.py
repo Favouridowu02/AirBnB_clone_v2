@@ -8,8 +8,8 @@ from os import getenv
 
 
 class State(BaseModel, Base):
-    """ State class 
-    
+    """ State class
+
     Represents a state for a MySQL database.
 
     Inherits from SQLAlchemy Base and links to the MySQL table states.
@@ -23,7 +23,7 @@ class State(BaseModel, Base):
     name = Column(String(128), nullable=False)
     if getenv("HBNB_TYPE_STORAGE") == "db":
         cities = relationship('City',  backref='state',
-                            cascade='all, delete-orphan')
+                              cascade='all, delete-orphan')
     else:
         @property
         def cities(self):
