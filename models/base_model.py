@@ -18,8 +18,8 @@ class BaseModel:
     """
     
     id = Column(String(60), nullable=False, unique=True, primary_key=True)
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
-    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    created_at = Column(DateTime, nullable=False, default=datetime.now(timezone.utc))
+    updated_at = Column(DateTime, nullable=False, default=datetime.now(timezone.utc))
 
     def __init__(self, *args, **kwargs):
         """Instantiates a new model"""
