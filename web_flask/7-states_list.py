@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-    This module Contains a python flask scrip to fetch from the mysql database
+    This module Contains a python flask script to fetch from the mysql database
 
     Routes:
         home: returns 'I am Home'
