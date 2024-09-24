@@ -34,6 +34,7 @@ def states_list():
 
 @app.teardown_appcontext
 def close(exception=True):
+    """This method handles the closure"""
     storage.close()
 
 
