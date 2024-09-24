@@ -4,19 +4,16 @@
 
     Routes:
         home: returns 'I am Home'
-
 """
 import sys
 import os
-
-# Add the parent directory to sys.path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from flask import Flask, render_template
 from models import storage
 from models.state import State
 
 
 app = Flask(__name__)
+
 
 @app.route('/', strict_slashes=False)
 def home():
